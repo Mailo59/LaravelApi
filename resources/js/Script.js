@@ -1,3 +1,4 @@
+// Llamada para obtener las tareas al cargar la página
 document.addEventListener('DOMContentLoaded', fetchTasks);
 
 async function fetchTasks() {
@@ -29,7 +30,16 @@ function renderTasks(tasks) {
     });
 }
 
-async function createTask() {
+window.prepareModalForCreate = function () {
+    document.getElementById('exampleModalLabel').textContent = 'AÑADIR NUEVA TAREA';
+    document.getElementById('taskId').value = ''; // Limpiar el ID para creación
+    document.getElementById('taskName').value = '';
+    document.getElementById('taskDescription').value = '';
+    document.getElementById('taskProcess').value = '';
+    document.getElementById('saveTaskButton').onclick = createTask;
+};
+
+window.createTask = async function () {
     const taskId = document.getElementById('taskId').value;
     const name = document.getElementById('taskName').value;
     const description = document.getElementById('taskDescription').value;
@@ -64,9 +74,9 @@ async function createTask() {
 
     // Restaura el título del modal a "Añadir Nueva Tarea"
     document.getElementById('exampleModalLabel').textContent = 'AÑADIR NUEVA TAREA';
-}
+};
 
-async function deleteTask(taskId) {
+window.deleteTask = async function (taskId) {
     // Confirmación de eliminación
     const confirmation = confirm("¿Estás seguro de que deseas eliminar esta tarea?");
     if (!confirmation) return;
@@ -80,9 +90,9 @@ async function deleteTask(taskId) {
     // Recargar la lista de tareas después de eliminar
     fetchTasks();
     showAlert("Tarea eliminada exitosamente", "danger"); // Mensaje de eliminación
-}
+};
 
-async function editTask(taskId) {
+window.editTask = async function (taskId) {
     document.getElementById('exampleModalLabel').textContent = 'EDITAR TAREA';
     document.getElementById('saveTaskButton').onclick = createTask;
     document.getElementById('taskId').value = taskId;
@@ -97,10 +107,7 @@ async function editTask(taskId) {
     } catch (error) {
         console.error('Error al obtener la tarea:', error);
     }
-}
-
-// Evento para el botón de "Guardar" en el modal
-document.querySelector('#modalañadir .btn-primary').addEventListener('click', createTask);
+};
 
 function showAlert(message, type = "success") {
     const alertContainer = document.getElementById('alertContainer');
